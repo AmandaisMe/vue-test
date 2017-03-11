@@ -1,6 +1,6 @@
 <template>
 	 <div id='avue'>
-	 	<div class="list card" v-for='item in items'>
+	 	<div class="list card" v-for='item in filteredItems'>
             <div class="item item-avatar">
             	<a href=''>
             	<h2 style='color:black'>{{item.titleCn}}</h2>
@@ -13,7 +13,8 @@
             </div>
             
         </div>
-      
+      	 <button @click='next()'>下一页</button>
+        <button @click='prev()'>上一页</button>
 	 </div>
 
 </template>
@@ -23,9 +24,15 @@
 
 		data:function(){
 	    	return{
-	    		items:''
+	    		items:'',
+	    		start:1
 	    	}
     	},
+    	computed:{
+			filteredItems: function () {
+  		  		return this.items.slice(0, this.start)
+  			}
+		},
 		methods:{
 			 getdata:function(){
 	            console.log(this)
@@ -34,13 +41,18 @@
 	                    callback:'JSON-CALLBACK'
 	                }
 	            }).then(function(data){
-	                console.log(data.data.movies)
+	               
 	                this.items = data.data.movies;
-	                console.log(this.items)
-
 
 	            })
-	        }
+	        },
+	        next:function(){
+				console.log(this.start)
+				this.start += 1
+			},
+			prev:function(){
+				this.start -=1
+			}
 		},
 		mounted:function(){
 			this.getdata()
